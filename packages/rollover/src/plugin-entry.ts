@@ -50,10 +50,9 @@ export default define({
 
       // idle hook: the runner awaits this handler, so run the extraction to
       // completion here (onIdle) — a debounced timer would race the short-lived
-      // `opencode run` process exit and often never fire at all. onIdle
-      // classifies the pending turn with the deterministic extraction gate
-      // and schedules the extraction only when the validated policy says to
-      // run; any gate error falls back to the pre-gate behavior.
+      // `opencode run` process exit and often never fire at all. v2: the idle
+      // hook runs extraction unconditionally (background enrichment); it can
+      // never block or defer the deterministic swap.
       yield* ctx.session.hook("experimental.idle", (event) =>
         Effect.gen(function* () {
           const session = yield* ctx.session.get({ sessionID: event.sessionID }).pipe(Effect.catch(() => Effect.succeed(null)))
