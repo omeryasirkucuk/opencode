@@ -12,9 +12,9 @@ describe("estimateTokens", () => {
     expect(estimateTokens("abcde")).toBe(2)
   })
 
-  test("turkish characters count by code unit like any other", () => {
-    // "şğüı ç" is 6 code units (space included) → ceil(6/4) = 2
-    expect(estimateTokens("şğüı ç")).toBe(2)
+  test("multibyte characters count by code unit like any other", () => {
+    // "日本語 x" is 6 code units (space included) → ceil(6/4) = 2
+    expect(estimateTokens("日本語 x")).toBe(2)
   })
 
   test("long string", () => {
@@ -22,7 +22,7 @@ describe("estimateTokens", () => {
   })
 
   test("single char", () => {
-    expect(estimateTokens("ş")).toBe(1)
+    expect(estimateTokens("日")).toBe(1)
   })
 
   test("json serialization path uses the same estimator", () => {
@@ -64,7 +64,7 @@ describe("estimateMessageTokens", () => {
   })
 
   test("consistent with estimateTokens", () => {
-    const m = msg({ parts: [{ type: "text", text: "şğüı ç şğüı ç" }] })
-    expect(estimateMessageTokens(m)).toBe(estimateTokens("şğüı ç şğüı ç"))
+    const m = msg({ parts: [{ type: "text", text: "日本語 x 日本語 x" }] })
+    expect(estimateMessageTokens(m)).toBe(estimateTokens("日本語 x 日本語 x"))
   })
 })
